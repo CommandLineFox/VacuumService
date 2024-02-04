@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit user</title>
+    <!-- Add Angular and other necessary scripts here -->
+</head>
+
+<body>
+    <div *ngIf="hasPermission(Permissions.updateUserPermission)">
+        <form (ngSubmit)="updateUser()">
+            <input type="text" [(ngModel)]="editedUser.firstName" placeholder="First Name" name="firstName">
+            <input type="text" [(ngModel)]="editedUser.lastName" placeholder="Last Name" name="lastName">
+            <input type="email" [(ngModel)]="editedUser.mail" placeholder="Mail" name="mail">
+            <input type="password" [(ngModel)]="editedUser.password" placeholder="Password" name="password">
+            <input type="range" min="0" max="1023" [(ngModel)]="editedUser.permissions" name="permissions">
+            <button type="submit" [disabled]="!isFormChanged()">Update</button>
+        </form>
+    </div>
+
+</body>
+
+</html>

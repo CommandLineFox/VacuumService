@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add vacuum</title>
+    <!-- Add Angular and other necessary scripts here -->
+</head>
+
+<body>
+    <div *ngIf="hasPermission(Permissions.addVacuumPermission)">
+        <form (ngSubmit)="addVacuum()">
+            <label for="vacuumName">Vacuum Name:</label>
+            <input type="text" id="vacuumName" [(ngModel)]="vacuumName" name="vacuumName" required>
+            <button type="submit" [disabled]="!vacuumName">Add Vacuum</button>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vacuum Cleaner List</title>
+</head>
+
+<body>
+    <div>
+        <!-- Button to navigate to user list if the user has readUserPermission -->
+        <button *ngIf="hasPermission(Permissions.readUserPermission)" (click)="navigateToUserList()">User List</button>
+
+        <!-- Button to add a new vacuum cleaner -->
+        <button *ngIf="hasPermission(Permissions.addVacuumPermission)" (click)="navigateToAddVacuum()">Add
+            Cleaner</button>
+            <button *ngIf="hasPermission(Permissions.startVacuumPermission) || hasPermission(Permissions.stopVacuumPermission) || hasPermission(Permissions.dischargeVacuumPermission)" (click)="navigateToErrorList()">Error List</button>
+        <div *ngIf="hasPermission(Permissions.searchVacuumPermission)">
+            <form (ngSubmit)="searchVacuums()">
+                <input type="text" placeholder="Name" [(ngModel)]="searchName" name="searchName">
+                <select [(ngModel)]="searchStatus" name="searchStatus">
+                    <option value="">Select Status</option>
+                    <option value="0">Stopped</option>
+                    <option value="1">Running</option>
+                    <option value="2">Discharging</option>
+                </select>
+                <input type="date" [(ngModel)]="dateFrom" name="dateFrom">
+                <input type="date" [(ngModel)]="dateTo" name="dateTo">
+                <button type="submit" [disabled]="!isSearchFormValid()">Search</button>
+            </form>
+        </div>
+        <!-- Table of vacuum cleaners, visible if the user has searchVacuumPermission -->
+        <div *ngIf="hasPermission(Permissions.searchVacuumPermission)">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Date Added</th>
+                        <th *ngIf="hasPermission(Permissions.startVacuumPermission)">Start</th>
+                        <th *ngIf="hasPermission(Permissions.stopVacuumPermission)">Stop</th>
+                        <th *ngIf="hasPermission(Permissions.dischargeVacuumPermission)">Discharge</th>
+                        <th *ngIf="hasPermission(Permissions.startVacuumPermission)">Schedule Start</th>
+                        <th *ngIf="hasPermission(Permissions.stopVacuumPermission)">Schedule Stop</th>
+                        <th *ngIf="hasPermission(Permissions.dischargeVacuumPermission)">Schedule Discharge</th>
+                        <th *ngIf="hasPermission(Permissions.removeVacuumPermission)">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cleaner of vacuumCleaners">
+                        <td>{{ cleaner.cleanerId }}</td>
+                        <td>{{ cleaner.name }}</td>
+                        <td>{{ getStatusLabel(cleaner.status) }}</td>
+                        <td>{{ cleaner.date | date }}</td>
+                        <td *ngIf="hasPermission(Permissions.startVacuumPermission)">
+                            <button (click)="startCleaner(cleaner.cleanerId)">Start</button>
+                        </td>
+                        <td *ngIf="hasPermission(Permissions.stopVacuumPermission)">
+                            <button (click)="stopCleaner(cleaner.cleanerId)">Stop</button>
+                        </td>
+                        <td *ngIf="hasPermission(Permissions.dischargeVacuumPermission)">
+                            <button (click)="dischargeCleaner(cleaner.cleanerId)">Discharge</button>
+                        </td>
+                        <td *ngIf="hasPermission(Permissions.startVacuumPermission)">
+                            <input type="datetime-local" [(ngModel)]="scheduleInput[cleaner.cleanerId]" placeholder="Scheduled Time">
+                            <button [disabled]="!scheduleInput[cleaner.cleanerId]"
+                                (click)="scheduleAction(cleaner.cleanerId, 'start')">Schedule Start</button>
+                        </td>
+                        <td *ngIf="hasPermission(Permissions.stopVacuumPermission)">
+                            <input type="datetime-local" [(ngModel)]="scheduleInput[cleaner.cleanerId]" placeholder="Scheduled Time">
+                            <button [disabled]="!scheduleInput[cleaner.cleanerId]"
+                                (click)="scheduleAction(cleaner.cleanerId, 'stop')">Schedule Stop</button>
+                        </td>
+                        <td *ngIf="hasPermission(Permissions.dischargeVacuumPermission)">
+                            <input type="datetime-local" [(ngModel)]="scheduleInput[cleaner.cleanerId]" placeholder="Scheduled Time">
+                            <button [disabled]="!scheduleInput[cleaner.cleanerId]"
+                                (click)="scheduleAction(cleaner.cleanerId, 'discharge')">Schedule Discharge</button>
+                        </td>
+                        <td *ngIf="hasPermission(Permissions.removeVacuumPermission)">
+                            <button (click)="removeCleaner(cleaner.cleanerId)">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

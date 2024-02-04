@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <!-- Add Angular and other necessary scripts here -->
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form (submit)="login()" *ngIf="!loggedIn">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" [(ngModel)]="mail" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" [(ngModel)]="password" name="password" required>
+            </div>
+            <button type="submit" [disabled]="!mail.trim() || !password.trim()">Login</button>
+        </form>
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+    </div>
+</body>
+
+</html>
